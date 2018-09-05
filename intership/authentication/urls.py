@@ -1,8 +1,13 @@
-from django.urls import path
-from .views import MainView, SignInView, SignUpView
+from django.urls import path, include
+from . import views
+from rest_framework.routers import DefaultRouter
+
+
+router = DefaultRouter()
+router.register(r'signup', views.Signup)
 
 urlpatterns = [
-    path('', MainView.as_view(), name='main'),
-    path('sign-in', SignInView.as_view(), name='sign-in'),
-    path('sign-up', SignUpView.as_view(), name='sign-up'),
+    path('', views.MainView.as_view(), name='main'),
+    # API
+    path('api/v1.0/', include(router.urls)),
 ]

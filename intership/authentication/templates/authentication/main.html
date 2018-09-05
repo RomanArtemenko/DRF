@@ -2,6 +2,10 @@
 
 {% block content %}
 
-    Main page... Here is not anything yet.
+    {% if request.user.is_authenticated %}
+<p> Welcome, <b> {{ user.username }}.</b> Thanks for logging in. </p>
+    {% else %}
+        <p> You are not authenticated. </p>
+    {% endif %}
 
 {% endblock content %}
