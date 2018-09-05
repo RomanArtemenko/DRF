@@ -28,7 +28,7 @@ class Signup(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
     serializer_class = CustomUserSerializer
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return  UserSerializer
-        else:
-            self.serializer_class
+        if self.request.POST:
+            return UserSerializer
+        return self.serializer_class
+

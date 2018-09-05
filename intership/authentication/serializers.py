@@ -3,12 +3,12 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
 
+
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = ('username', 'email', 'first_name', 'last_name')
-
 
 class CustomUserSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150,
@@ -29,5 +29,5 @@ class CustomUserSerializer(serializers.Serializer):
 
         return attrs
 
-    # def create(self, validated_data):
-    #     return self.Meta.model.objects._create_user(validated_data)
+    def create(self, validated_data):
+        return self.Meta.model.objects._create_user(**validated_data)
