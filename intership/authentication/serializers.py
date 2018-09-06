@@ -8,9 +8,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name')
 
-class CustomUserSerializer(serializers.Serializer):
+class SignUpSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150,
                                      validators=[UniqueValidator(queryset=User.objects.all())])
     email = serializers.EmailField()
@@ -19,10 +19,6 @@ class CustomUserSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=128, min_length=8)
     confirm_password = serializers.CharField(max_length=128, min_length=8)
 
-    class Meta:
-        model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password', 'confirm_password')
-
     def validate(self, attrs):
         if attrs['password'] != attrs['confirm_password']:
             raise ValidationError('"username" and "confirm_username" should be the same !')
@@ -30,4 +26,6 @@ class CustomUserSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
-        return self.Meta.model.objects._create_user(**validated_data)
+        user_data = dict(validated_data)
+        user_data.pop('confirm_password')
+        return User.objects.create_user(**user_data)

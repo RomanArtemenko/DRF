@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
+from rest_framework.response import Response
+
+from rest_framework import status
 from django.views import View
 from rest_framework import viewsets
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, CustomUserSerializer
+from .serializers import UserSerializer, SignUpSerializer
 
 
 # Create your views here.
@@ -25,10 +28,12 @@ class SignUpView(View):
 
 class Signup(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
-    serializer_class = CustomUserSerializer
+    serializer_class = SignUpSerializer
 
-    def get_serializer_class(self):
-        if self.request.POST:
-            return UserSerializer
-        return self.serializer_class
-
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers({})
+        out_serializer = UserSerializer(serializer.instance)
+        return Response(out_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
