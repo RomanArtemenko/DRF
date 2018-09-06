@@ -38,14 +38,6 @@ class SignInSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150, min_length=1)
     password = serializers.CharField(max_length=128, min_length=8)
 
-    # def validate(self, attrs):
-    #     username = attrs['username']
-    #     password = attrs['password']
-    #
-    #
-    #
-    #     return attrs
-
     def create(self, validated_data):
         user = authenticate(
             username=validated_data['username'],
