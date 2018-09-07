@@ -22,13 +22,13 @@ class SignUpTestCase(TestCase):
 
     def test_check_user_created(self):
         user_count_before = User.objects.count()
-        res = self.client.post('/api/v1.0/auth/signup/', self.valid_user)
+        self.client.post('/api/v1.0/auth/signup/', self.valid_user)
         user_count_after = User.objects.count()
         self.assertEqual(user_count_before + 1, user_count_after)
 
     def test_check_user_not_created(self):
         user_count_before = User.objects.count()
-        res = self.client.post('/api/v1.0/auth/signup/', self.invalid_user)
+        self.client.post('/api/v1.0/auth/signup/', self.invalid_user)
         user_count_after = User.objects.count()
         self.assertEqual(user_count_before, user_count_after)
 
@@ -39,11 +39,10 @@ class SignInTestCase(TestCase):
     def setUpTestData(cls):
         # Set up data for the whole TestCase
         user = User.objects.create_user(username='test122',
-            email='test1@mail.net',
-            first_name='TestName',
-            last_name='TestLastName',
-            password='password'
-                            )
+                                        email='test1@mail.net',
+                                        first_name='TestName',
+                                        last_name='TestLastName',
+                                        password='password')
         user.save()
 
     def setUp(self):
@@ -61,9 +60,7 @@ class SignInTestCase(TestCase):
         res = client_data.post('/api/v1.0/auth/signin/', self.valid_user)
         self.assertIn('Token', res.content.decode('utf-8'))
 
-
     def test_get_token_fail(self):
         client_data = self.client
         res = client_data.post('/api/v1.0/auth/signin/', self.invalid_user)
         self.assertIn('Wrong password', res.content.decode('utf-8'))
-

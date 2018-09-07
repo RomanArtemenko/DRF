@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
-from django.contrib.auth import login as django_login
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,6 +33,7 @@ class SignUpSerializer(serializers.Serializer):
         user_data.pop('confirm_password')
         return User.objects.create_user(**user_data)
 
+
 class SignInSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150, min_length=1)
     password = serializers.CharField(max_length=128, min_length=8)
@@ -49,6 +49,3 @@ class SignInSerializer(serializers.Serializer):
 
         token, created = Token.objects.get_or_create(user=user)
         return token
-
-
-

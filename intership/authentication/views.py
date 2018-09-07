@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect
 from rest_framework.response import Response
-from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.views import View
 from rest_framework import viewsets
-from rest_framework import generics
 from django.contrib.auth.models import User
 from .serializers import UserSerializer, SignUpSerializer, SignInSerializer
 
