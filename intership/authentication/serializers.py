@@ -49,3 +49,11 @@ class SignInSerializer(serializers.Serializer):
 
         token, created = Token.objects.get_or_create(user=user)
         return token
+
+
+class FacebookSignInSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length=128, min_length=8)
+
+    def create(self, validated_data):
+        pass

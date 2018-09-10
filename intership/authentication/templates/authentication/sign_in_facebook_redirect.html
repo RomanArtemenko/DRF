@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Facebook Redirect</title>
+</head>
+<body>
+<H1> Facebook Redirect </H1>
+
+<B> CODE </B>
+
+    {% for item, val in params.items %}
+        <p>{{ item }} : {{ val }} </p>
+    {% endfor %}
+
+<B> ACCESS </B>
+
+    {% for item, val in at.items %}
+        <p>{{ item }} : {{ val }} </p>
+    {% endfor %}
+
+<B> USER INFO </B>
+
+    {% for item, val in user_info.items %}
+        <p>{{ item }} : {{ val  }} </p>
+    {% endfor %}
+</body>
+</html>
