@@ -39,31 +39,19 @@ class SignInFacebookView(View):
 
     clint_id = OAUTH_CREDENTIALS['facebook']['id']
 
-    # token_statte =
-
     veriables = {
         'client_id': clint_id,
         'redirect_uri':
         'http://localhost:8000/auth/facebook/redirect',
         #'state': '{st=state123abc,ds=123456789}',
-        'response_type': 'code'
+        'response_type': 'code',
+        'scope': 'email'
     }
-
 
     url = authorize_url + urllib.parse.urlencode(veriables)
 
     def get(self, request, *args, **kwargs):
-
-        # res = HttpResponseRedirect(self.url)
-        # print('RESULT : %s' % res)
-
-        # print('PARAMS : %s' % urllib.parse.urlencode(res))
-
-        # return redirect('main')
         return HttpResponseRedirect(self.url)
-
-    def post(self, request, *args, **kwargs):
-        return redirect('main')
 
 class SignInFacebookRedirectView(View):
     template_name = "authentication/sign_in_facebook_redirect.html"
@@ -78,8 +66,8 @@ class SignInFacebookRedirectView(View):
     }
 
     def get(self, request, *args, **kwargs):
-        print('>>> REQUEST GET : %s' % request.GET)
-        # print('>>> REQUEST POST : %s' % request.POST)
+        if 'code' not in request.GET:
+            return redirect('main')
 
         code = request.GET['code']
 
@@ -87,25 +75,19 @@ class SignInFacebookRedirectView(View):
 
         url = self.access_url  + urllib.parse.urlencode(self.access_vars)
 
-        print(url)
-
         at = requests.get(url)
 
-        print(at.json())
-
-        print('>>> ACCESS_TOKEN : %s' % at.json()['access_token'])
-        # print('>>> AT :  $s' % at.data)
         access_token = at.json()['access_token']
         # 'https://graph.facebook.com/v3.1/me?access_token=EAAGwgjSvQkoBABgGZAEZAwlhiGTtqlfzzcZCl5SeU3qoQgkapZBmXz3e1Bu1qXnwKBoD11I9ZBCBF0lZC7G51xdXPpO6w2z97SHGjyzr5fOVGzH8k8PjhBu6kvhVYD2ZAW8PiqtlFgsS3jA6vlQFcE7HMSkCJkwWSEEZA4k9MLW7XAZDZD&debug=all&fields=id%2Cname&format=json&method=get&pretty=0&suppress_http_code=1'
 
+        user_info = requests.get('https://graph.facebook.com/v3.1/me?access_token=' + access_token + '&fields=id%2Cname%2Clast_name%2Cfirst_name%2Cemail%2Cgender&format=json&method=get&pretty=0&suppress_http_code=1')
 
-        user_info = requests.get('https://graph.facebook.com/v3.1/me?access_token=EAAGwgjSvQkoBABgGZAEZAwlhiGTtqlfzzcZCl5SeU3qoQgkapZBmXz3e1Bu1qXnwKBoD11I9ZBCBF0lZC7G51xdXPpO6w2z97SHGjyzr5fOVGzH8k8PjhBu6kvhVYD2ZAW8PiqtlFgsS3jA6vlQFcE7HMSkCJkwWSEEZA4k9MLW7XAZDZD&fields=id%2Cname&format=json&method=get&pretty=0&suppress_http_code=1')
-
-        print('>>>> USER_INFO : %s' % user_info.json())
-
-        me_url2 = "https://graph.facebook.com/me"
-
-        print('>>> ME : %s ' %  me_url2)
+        user, created = User.objects.get_or_create(username=user_info.json()['name'])
+        if created:
+            user.last_name = user_info.json()['last_name']
+            user.first_name = user_info.json()['first_name']
+            user.email = user_info.json()['email']
+            user.save()
 
         return  render(request, self.template_name, {'params': request.GET, 'at': at.json(), 'user_info': user_info.json()})
 
