@@ -1,9 +1,10 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
+User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):

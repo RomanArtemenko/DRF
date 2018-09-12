@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 ]
 
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -124,8 +126,13 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = 'main'
 
+
+AUTH_USER_MODEL = 'authentication.MyUser'
+
 try:
     from .social_config import OAUTH_CREDENTIALS
 except:
     raise ImportError("social_config.py not found")
+
+
 

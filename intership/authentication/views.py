@@ -7,9 +7,10 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status
 from django.views import View
 from rest_framework import viewsets
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from .serializers import UserSerializer, SignUpSerializer, SignInSerializer
 from intership.settings import OAUTH_CREDENTIALS
+User = get_user_model()
 
 
 # Create your views here.
@@ -82,12 +83,20 @@ class SignInFacebookRedirectView(View):
 
         user_info = requests.get('https://graph.facebook.com/v3.1/me?access_token=' + access_token + '&fields=id%2Cname%2Clast_name%2Cfirst_name%2Cemail%2Cgender&format=json&method=get&pretty=0&suppress_http_code=1')
 
-        user, created = User.objects.get_or_create(username=user_info.json()['name'])
+        # user, created = User.objects.get_or_create(username=user_info.json()['name'])
+        # if created:
+        #     user.last_name = user_info.json()['last_name']
+        #     user.first_name = user_info.json()['first_name']
+        #     user.email = user_info.json()['email']
+        #     user.save()
+
+        user, created = User.objects.get_or_create(email=user_info.json()['email'])
         if created:
             user.last_name = user_info.json()['last_name']
             user.first_name = user_info.json()['first_name']
-            user.email = user_info.json()['email']
+            user.email = user_info.json()['name']
             user.save()
+
 
         return  render(request, self.template_name, {'params': request.GET, 'at': at.json(), 'user_info': user_info.json()})
 
