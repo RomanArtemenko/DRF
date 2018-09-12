@@ -9,7 +9,7 @@ from django.contrib.auth.models import  AbstractUser, UserManager
 
 
 class MyUserManager(UserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, email, password=None, **extra_fields):
         """
          Creates and saves a User with the given email and password.
         """
@@ -18,6 +18,7 @@ class MyUserManager(UserManager):
 
         user = self.model(
             email=self.normalize_email(email),
+            ** extra_fields
         )
         user.set_password(password)
         user.save(using=self._db)
