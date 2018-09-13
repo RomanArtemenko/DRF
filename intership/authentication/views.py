@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 import urllib
 import requests
+from django.urls import reverse
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
@@ -42,17 +43,19 @@ class SignInFacebookView(View):
 
     authorize_vars = {
         'client_id': clint_id,
-        'redirect_uri':
-        'http://localhost:8000/auth/facebook/redirect',
+        'redirect_uri': '',
         # 'state': '{st=state123abc,ds=123456789}',
         'response_type': 'code',
         'scope': 'email'
     }
 
-    url = authorize_url + urllib.parse.urlencode(authorize_vars)
-
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(self.url)
+        url_fb = request.build_absolute_uri(
+            reverse('sign-in-facebook-redirect')
+        )
+        self.authorize_vars.update({'redirect_uri': url_fb})
+        url = self.authorize_url + urllib.parse.urlencode(self.authorize_vars)
+        return HttpResponseRedirect(url)
 
 
 class SignInFacebookRedirectView(View):
@@ -131,3 +134,25 @@ class SignIn(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
         out_data = 'Token : %s' % serializer.instance.key
         return Response(out_data,
                         status=status.HTTP_200_OK, headers=headers)
+
+
+class LoginView(View):
+    template_name = "authentication/login.html"
+    errors = []
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'errors': self.errors})
+
+    def post(self, request, *args, **kwargs):
+        return redirect('main')
+
+
+class RegisterView(View):
+    template_name = "authentication/register.html"
+    errors = []
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'errors': self.errors})
+
+    def post(self, request, *args, **kwargs):
+        return redirect('main')

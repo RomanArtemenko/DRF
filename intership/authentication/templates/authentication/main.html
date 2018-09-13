@@ -2,8 +2,8 @@
 
 {% block content %}
 
-    {% if request.user.is_authenticated %}
-<p> Welcome, <b> {{ user.username }}.</b> Thanks for logging in. </p>
+    {% if user.is_authenticated %}
+        <p> Welcome, <b> {{ user.get_username }}.</b> Thanks for logging in. </p>
     {% else %}
         <p> You are not authenticated. </p>
     {% endif %}
