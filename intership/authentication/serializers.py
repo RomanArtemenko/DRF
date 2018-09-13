@@ -17,7 +17,9 @@ class UserSerializer(serializers.ModelSerializer):
 class SignUpSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150,
                                      min_length=1)
-    email = serializers.EmailField(validators=[UniqueValidator(queryset=User.objects.all())])
+    email = serializers.EmailField(
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
     first_name = serializers.CharField(max_length=30, min_length=2)
     last_name = serializers.CharField(max_length=30, min_length=2)
     password = serializers.CharField(max_length=128, min_length=8)
@@ -25,7 +27,9 @@ class SignUpSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         if attrs['password'] != attrs['confirm_password']:
-            raise ValidationError('"password" and "confirm_password" should be the same !')
+            raise ValidationError(
+                '"password" and "confirm_password" should be the same !'
+            )
 
         return attrs
 
@@ -50,11 +54,3 @@ class SignInSerializer(serializers.Serializer):
 
         token, created = Token.objects.get_or_create(user=user)
         return token
-
-
-class FacebookSignInSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField(max_length=128, min_length=8)
-
-    def create(self, validated_data):
-        pass

@@ -1,9 +1,6 @@
 from django.db import models
 from django.contrib.auth.validators import UnicodeUsernameValidator
-# from django.contrib.auth import get_user_model
-from django.contrib.auth.models import  AbstractUser, UserManager
-# User = get_user_model()
-
+from django.contrib.auth.models import AbstractUser, UserManager
 
 # Create your models here.
 
@@ -23,8 +20,7 @@ class MyUserManager(UserManager):
         user.set_password(password)
         user.save(using=self._db)
 
-        return  user
-
+        return user
 
     def create_superuser(self, email, password):
         """
@@ -36,6 +32,7 @@ class MyUserManager(UserManager):
         )
         user.is_admin = True
         user.save(using=self._db)
+
 
 class MyUser(AbstractUser):
     username_validator = UnicodeUsernameValidator
@@ -64,7 +61,6 @@ class MyUser(AbstractUser):
 
 # class UserProfile(models.Model):
 #     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
-#     # user = models.OneToOneField('authentication.MyUser', on_delete=models.CASCADE)
 #     phone_number = models.CharField(max_length=12, blank=False)
 #     social_id = models.CharField(max_length= 128, blank=True)
 #     nickname = models.CharField(max_length=50, default='')
