@@ -54,8 +54,6 @@ class SignInSerializer(serializers.Serializer):
         if user is None:
             raise ValidationError('Wrong password')
 
-        # login(user)
-
         token, created = Token.objects.get_or_create(user=user)
         return token
 

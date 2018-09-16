@@ -133,20 +133,20 @@ class RegisterView(View):
 
 
 #API view
-# class SignUp(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = SignUpSerializer
-#
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_create(serializer)
-#         headers = self.get_success_headers({})
-#         out_serializer = UserSerializer(serializer.instance)
-#         return Response(out_serializer.data,
-#                         status=status.HTTP_201_CREATED, headers=headers)
-#
-#
+class SignUp(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = SignUpSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers({})
+        out_serializer = UserSerializer(serializer.instance)
+        return Response(out_serializer.data,
+                        status=status.HTTP_201_CREATED, headers=headers)
+
+
 class SignIn(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = Token.objects.all()
     serializer_class = SignInSerializer
@@ -161,69 +161,40 @@ class SignIn(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
                         status=status.HTTP_200_OK, headers=headers)
 
 
-class Profile(viewsets.views.APIView):
-    # queryset = User.objects.none()
-    serializer_class = UserSerializer
+# class Profile(viewsets.views.APIView):
+#     serializer_class = UserSerializer
+#     permission_classes = (permissions.IsAuthenticated, )
+#
+#     def get(self, request, *args, **kwargs):
+#         user = request.user
+#         serializer = self.serializer_class(user)
+#         return Response(serializer.data)
 
-    permission_classes = (permissions.IsAuthenticated, )
-
-    def get(self, request, *args, **kwargs):
-        # serializer = self.serializer_class(data=request.data,
-        #                                    context={'request': request})
-        # serializer.is_valid(raise_exception=True)
-        # user = serializer.validated_data['user']
-        # token, created = Token.objects.get_or_create(user=user)
-
-        user = request.user
-        serializer = self.serializer_class(user)
-        return Response(serializer.data)
-
-    # lookup_field = 'key'
-    # lookup_value_regex = '[0-9a-f]'
-
-    # def retrieve(self, request, *args, **kwargs):
-    #     # instance = self.get_object()
-    #     serializer = self.get_serializer(data=request.data)
-    #     return Response(serializer.data)
 
 # class  UserInfo(viewsets.mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 #     queryset = User.objects.none()
-#     serializer_class = UserInfoSerializer
-#
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_create(serializer)
-#         headers = self.get_success_headers({})
-#         # out_serializer = UserSerializer(serializer.instance)
-#         out_serializer = {
-#             'id': serializer.instance.user.pk,
-#             'username': serializer.instance.user.username
-#         }
-#         return Response(out_serializer,
-#                         status=status.HTTP_201_CREATED, headers=headers)
-
-
-# class UserViewSet(ReadOnlyModelViewSet):
-#     queryset = User.objects.all()
 #     serializer_class = UserSerializer
-
-# class CustomAuthToken(ObtainAuthToken):
 #
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.serializer_class(data=request.data,
-#                                            context={'request': request})
-#         serializer.is_valid(raise_exception=True)
-#         user = serializer.validated_data['user']
-#         token, created = Token.objects.get_or_create(user=user)
-#         return Response({
-#             'token': token.key,
-#             'user_id': user.pk,
-#             'email': user.email
-#         })
+#     def get_object(self):
+#         return self.request.user
+#
+#     def retrieve(self, request, *args, **kwargs):
+#         instance = self.get_object()
+#         # instance = request.user
+#         serializer = self.get_serializer(instance)
+#         return Response(serializer.data)
 
-class CustomObtainAuthToken(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
-        token = Token.objects.get(key=response.data['token'])
-        return Response({'token': token.key, 'id': token.user_id})
+
+class  Profile(viewsets.mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = User.objects.none()
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
+
+    def list(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not instance.is_authenticated:
+            return Response({'username': 'Anonymous'})
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)

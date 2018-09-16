@@ -1,11 +1,25 @@
 {% extends 'authentication/base.html' %}
 
+{% load static %}
+
 {% block content %}
 
+<div>
     {% if user.is_authenticated %}
         <p> Welcome, <b> {{ user.get_username }}.</b> Thanks for logging in. </p>
     {% else %}
         <p> You are not authenticated. </p>
     {% endif %}
+</div>
+
+<div id="welcome">
+    <p> You are logged in as <b> %username% </b> </p>
+</div>
+
 
 {% endblock content %}
+
+{% block js %}
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+{% endblock js %}
