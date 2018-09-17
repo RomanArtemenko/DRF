@@ -1,28 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Facebook Redirect</title>
-</head>
-<body>
-<H1> Facebook Redirect </H1>
+{% load static %}
+<!DOCTYPE html>-->
 
-<B> CODE </B>
+<p>Please wait.. </p>
 
-    {% for item, val in params.items %}
-        <p>{{ item }} : {{ val }} </p>
-    {% endfor %}
+<!--<html lang="en">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<title>Facebook Redirect</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<H1> Facebook Redirect </H1>-->
 
-<B> ACCESS </B>
+<!--<B> CODE </B>-->
 
-    {% for item, val in at.items %}
-        <p>{{ item }} : {{ val }} </p>
-    {% endfor %}
+    <!--{% for item, val in params.items %}-->
+        <!--<p>{{ item }} : {{ val }} </p>-->
+    <!--{% endfor %}-->
 
-<B> USER INFO </B>
+<!--<B> ACCESS </B>-->
 
-    {% for item, val in user_info.items %}
-        <p>{{ item }} : {{ val  }} </p>
-    {% endfor %}
-</body>
-</html>
+    <!--{% for item, val in at.items %}-->
+        <!--<p>{{ item }} : {{ val }} </p>-->
+    <!--{% endfor %}-->
+
+<!--<B> USER INFO </B>-->
+
+    <!--{% for item, val in user_info.items %}-->
+        <!--<p>{{ item }} : {{ val  }} </p>-->
+    <!--{% endfor %}-->
+<!--</body>-->
+<!--</html> -->
+
+    {% if token %}
+        <input type="hidden" id="access_token" value="{{ token }}">
+    {% endif %}
+
+{% block js %}
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="{% static 'js/redirect.js' %}"></script>
+{% endblock js %}

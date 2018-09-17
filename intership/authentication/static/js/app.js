@@ -16,18 +16,16 @@ $(document).ready(function(){
 
             $.ajax({
                 type: "POST",
-                url: "http://localhost:8000/api/v1.0/auth/signin/",
+                url: "/api/v1.0/auth/signin/",
                 data: JSON.stringify({'email': $('#inputEmail').val(), "password": $('#inputPassword').val()}),
                 contentType: "application/json",
                 cache: false,
                 success: function(data){
                     console.log(data);
                     localStorage.setItem('UserToken', data);
-                    window.location.href = "http://localhost:8000";
-//                    document.cookie = "Authorization=" + data;
+                    window.location.href = "/";
                 },
                 error: function(xhr){
-
                     console.log(xhr);
                 }
             });
@@ -51,7 +49,7 @@ $(document).ready(function(){
                 cache: false,
                 success: function(data){
                     console.log(data);
-                    window.location.href = "http://localhost:8000/login"
+                    window.location.href = "/login"
                 },
                 error: function(xhr){
                     console.log(xhr);

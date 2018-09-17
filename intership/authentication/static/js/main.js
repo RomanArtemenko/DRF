@@ -11,27 +11,17 @@ $(document).ready(function(){
         }
     });
 
-
     $.ajax({
         type: "GET",
-        url: "http://localhost:8000/api/v1.0/auth/profile/",
-//        data: JSON.stringify({'email': $('#inputEmail').val(), "password": $('#inputPassword').val()}),
+        url: "/api/v1.0/auth/profile/",
         contentType: "application/json",
         headers: { 'Authorization': localStorage.getItem('UserToken') },
         cache: false,
         success: function(data){
-            console.log(data);
-                    alert(data["username"]);
-//                    $("#welcome").replace('%username%', data["username"]);
-//                    localStorage.setItem('UserToken', data.split(':')[1]);
-//            localStorage.setItem('UserToken', data);
-//            window.location.href = "http://localhost:8000";
-//            document.cookie = "Authorization=" + data;
-//                    alert( document.cookie );
-
+            var el_p = $('#welcome').find('p');
+            el_p.text(el_p.text().replace('%username%', data["username"]));
         },
         error: function(xhr){
-
             console.log(xhr);
         }
     });
