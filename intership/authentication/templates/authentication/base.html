@@ -29,7 +29,7 @@
         <a class="p-2 text-dark" href="#">Support</a>
         <a class="p-2 text-dark" href="#">Pricing</a>
       </nav>
-      <a class="btn btn-outline-primary" href="{% url 'sign-in-facebook' %}">Sign in</a>
+      <a class="btn btn-outline-primary" href="{% url 'login' %}">Sign in</a>
     </div>
 
     <div class="container">
@@ -47,6 +47,7 @@
     <script src="../../assets/js/vendor/popper.min.js"></script>
     <script src="../../dist/js/bootstrap.min.js"></script>
     <script src="../../assets/js/vendor/holder.min.js"></script>
+    {% block extra_js %} {% endblock extra_js %}
     <script>
       Holder.addTheme('thumb', {
         bg: '#55595c',

@@ -1,4 +1,5 @@
 {% extends 'authentication/base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -7,6 +8,11 @@
     {% else %}
         <p> You are not authenticated. </p>
     {% endif %}
+
+    <div>
+        <p>------</p>
+        <p> {{ request.auth }} </p>
+    </div>
 
 <a href="{% url "social:begin" "facebook" %}">Google+</a>
 
